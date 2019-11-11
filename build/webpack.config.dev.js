@@ -3,6 +3,7 @@ const webpackMerge = require('webpack-merge');
 const webpackConfigBase = require('./webpack.config.base.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const portfinder = require('portfinder');
+const autoprefixer = require('autoprefixer');
 
 const webpackConfigDev = webpackMerge(webpackConfigBase, {
   module: {
@@ -13,6 +14,37 @@ const webpackConfigDev = webpackMerge(webpackConfigBase, {
           'style-loader', { loader: 'css-loader', options: { importLoaders: 1 } }, 'postcss-loader',
         ],
       },
+      {
+        test: /\.sass$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => {
+                return [autoprefixer];
+              },
+              sourceMap: true
+            }
+          },
+          {
+            loader: "group-css-media-queries-loader",
+            options: { sourceMap: true }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true
+            }
+          },
+        ]
+      }
     ],
   },
   devServer: {

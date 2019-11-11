@@ -27,15 +27,8 @@ const config = {
         use: ['babel-loader'],
       },
       {
-        test: /\.html$/,
-        use: [
-          {
-            loader: 'html-loader',
-            options: {
-              minimize: true,
-            },
-          },
-        ],
+        test: /\.twig$/,
+        use: ['html-loader', 'twig-html-loader']
       },
       {
         test: /\.(png|jpg|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
@@ -102,7 +95,7 @@ const config = {
   plugins: [],
 };
 
-const pages = getEntries('./src/pages/', 'html');
+const pages = getEntries('./src/pages/', 'twig');
 
 for (const pathname in pages) {
   // Configured to generate the html file, define paths, etc.

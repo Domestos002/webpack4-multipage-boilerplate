@@ -4,6 +4,8 @@ const webpackConfigBase = require('./webpack.config.base.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const autoprefixer = require('autoprefixer');
+const cssnano = require('cssnano');
 
 module.exports = webpackMerge(webpackConfigBase, {
   module: {
@@ -14,6 +16,37 @@ module.exports = webpackMerge(webpackConfigBase, {
           MiniCssExtractPlugin.loader, {loader: 'css-loader', options: {importLoaders: 1}}, 'postcss-loader',
         ],
       },
+      {
+        test: /\.sass$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => {
+                return [autoprefixer, cssnano];
+              },
+              sourceMap: true
+            }
+          },
+          {
+            loader: "group-css-media-queries-loader",
+            options: { sourceMap: true }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true
+            }
+          },
+        ]
+      }
     ],
   },
   optimization: {
