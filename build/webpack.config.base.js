@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
 const { getEntries } = require('./utils.js');
 
 const entries = getEntries('./src/pages/', 'js');
@@ -31,40 +32,30 @@ const config = {
         use: ['html-loader', 'twig-html-loader']
       },
       {
-        test: /\.(png|jpg|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        test: /\.(png|jpg|gif)$/i,
         use: [
           {
             loader: 'url-loader',
             options: {
-              limit: 10000,
-              name: 'images/[name].[md5:hash:hex:8].[ext]',
+              limit: 8192,
+              name: 'assets/[name].[ext]',
             },
           },
         ],
       },
       {
-        test: /\.(woff|woff2|otf|ttf|eot)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        test: /\.svg$/,
         use: [
           {
-            loader: 'url-loader',
+            loader: 'svg-sprite-loader',
             options: {
-              limit: 10000,
-              name: 'fonts/[name].[md5:hash:hex:8].[ext]',
-            },
+              extract: true,
+              publicPath: '/'
+            }
           },
-        ],
-      },
-      {
-        test: /\.(mp4|ogg|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: 'assets/[name].[md5:hash:hex:8].[ext]',
-            },
-          },
-        ],
-      },
+          'svgo-loader'
+        ]
+      }
     ],
   },
   parallelism: 8,
@@ -92,7 +83,7 @@ const config = {
       },
     },
   },
-  plugins: [],
+  plugins: [new SpriteLoaderPlugin()],
 };
 
 const pages = getEntries('./src/pages/', 'twig');

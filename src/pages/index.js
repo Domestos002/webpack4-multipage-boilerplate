@@ -1,1 +1,2 @@
-window.console.log('index page js');
+import logoIcon from '../assets/icons/logo.svg';
+console.log('index page js');
